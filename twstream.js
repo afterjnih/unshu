@@ -49,9 +49,9 @@ wss.on('connection', function (ws) {
     });
 });
 
-cheerio.fetch(inputUrl, function(err, $, res){
+cheerio.fetch(inputUrl, function(err, $, res, html){
   var twitterScreenNames = [];
-  $('a').each(function(e){
+  $(".participation_table_area a").each(function(e){
     if ($('a')[e].attribs.title === 'Twitterを見る'){
       twitterScreenNames.push(url.parse($('a')[e].attribs.href, true).query.screen_name);
     }
