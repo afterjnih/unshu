@@ -63,6 +63,7 @@ cheerio.fetch(inputUrl, function(err, $, res, html){
 
   var userIds;
   twit.get('users/lookup', {screen_name: twitterScreenNamesSet.join(',')}, function(error, users, response){
+    console.log(users);
     userIds = users.reduce(function(previousUsers, currentUser){
       previousUsers.push(currentUser.id);
       return previousUsers;
