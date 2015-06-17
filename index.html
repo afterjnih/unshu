@@ -1,11 +1,10 @@
 <!DOCTYPE html>
+<html>
+<head>
 <meta charset="UTF-8">
 <title>chat</title>
-<script>
-var ws = new WebSocket('ws://localhost:3000');
-ws.onmessage = function (event) {
-  document.getElementById("messages").innerHTML += "<div>" + event.data + "</div>";
-
-</script>
-<form><input></form><div></div>
-<div id="messages"/>
+</head>
+<body>
+  <script src="bundle.js"></script>
+</body>
+</html>
