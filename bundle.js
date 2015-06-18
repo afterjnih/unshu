@@ -70,13 +70,17 @@ var Tweets = React.createClass({displayName: "Tweets",
 
 var Pane = React.createClass({displayName: "Pane",
   propTypes: {
+    name: React.PropTypes.string.isRequired,
     screenName: React.PropTypes.string.isRequired,
+    profileImageUrlHttps: React.PropTypes.string.isRequired,
     texts: React.PropTypes.array
   },
   render: function(){
     return(
       React.createElement("div", {className: "pane"}, 
-        React.createElement("dive", {className: "screenName"}, this.props.screenName), 
+        React.createElement("div", {className: "name"}, this.props.name), 
+        React.createElement("div", {className: "screenName"}, this.props.screenName), 
+        React.createElement("img", {className: "icon", src: this.props.profileImageUrlHttps}), 
         React.createElement(Tweets, {texts: this.props.texts})
       )
     );
@@ -90,7 +94,11 @@ var Panes = React.createClass({displayName: "Panes",
   renderPanes: function(tweets){
     var panes_list = [];
     for (userId in tweets){
-      panes_list.push(React.createElement(Pane, {screenName: tweets[userId].screen_name, texts: tweets[userId].texts}));
+      panes_list.push(React.createElement(Pane, {name: tweets[userId].name, 
+                            screenName: tweets[userId].screen_name, 
+                            profileImageUrlHttps: tweets[userId].profile_image_url_https, 
+                            texts: tweets[userId].texts})
+                      );
     }
     return panes_list;
   },

@@ -69,13 +69,17 @@ var Tweets = React.createClass({
 
 var Pane = React.createClass({
   propTypes: {
+    name: React.PropTypes.string.isRequired,
     screenName: React.PropTypes.string.isRequired,
+    profileImageUrlHttps: React.PropTypes.string.isRequired,
     texts: React.PropTypes.array
   },
   render: function(){
     return(
       <div className="pane">
-        <dive className="screenName">{this.props.screenName}</dive>
+        <div className="name">{this.props.name}</div>
+        <div className="screenName">{this.props.screenName}</div>
+        <img className="icon" src={this.props.profileImageUrlHttps} />
         <Tweets texts={this.props.texts}/>
       </div>
     );
@@ -89,7 +93,11 @@ var Panes = React.createClass({
   renderPanes: function(tweets){
     var panes_list = [];
     for (userId in tweets){
-      panes_list.push(<Pane screenName={tweets[userId].screen_name} texts={tweets[userId].texts}/>);
+      panes_list.push(<Pane name={tweets[userId].name}
+                            screenName={tweets[userId].screen_name}
+                            profileImageUrlHttps={tweets[userId].profile_image_url_https}
+                            texts={tweets[userId].texts}/>
+                      );
     }
     return panes_list;
   },
