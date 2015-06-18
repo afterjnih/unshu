@@ -29,7 +29,9 @@ var app = require('http').createServer(function(req, res) {
 }).listen(3000);
 
 var connects = [];
-
+// var userIds;
+var userData;
+var twitterScreenNamesSet;
 function broadcast (message) {
     connects.forEach(function (socket, i) {
         socket.send(message);
@@ -40,7 +42,7 @@ var wss = new WebSocketServer({'server': app});
 wss.on('connection', function (ws) {
     console.log('WebSocketServer connected');
     connects.push(ws);
-    broadcast('connected sockets: ' + connects.length);
+    broadcast(JSON.stringify(userData));
     ws.on('message', function (message) {
         console.log('received -' + message);
         broadcast(message);
@@ -52,7 +54,6 @@ wss.on('connection', function (ws) {
         connects = connects.filter(function (conn, i) {
             return (conn === ws) ? false : true;
         });
-        broadcast('connected sockets: ' + connects.length);
     });
 });
 
@@ -64,21 +65,24 @@ cheerio.fetch(inputUrl, function(err, $, res, html){
     }
   });
 
-  var twitterScreenNamesSet = twitterScreenNames.filter(function(screenName, index, self){
+  twitterScreenNamesSet = twitterScreenNames.filter(function(screenName, index, self){
     return self.indexOf(screenName) === index;
   });
 
-  var userIds;
   twit.get('users/lookup', {screen_name: twitterScreenNamesSet.join(',')}, function(error, users, response){
     console.log(users);
-    userIds = users.reduce(function(previousUsers, currentUser){
-      previousUsers.push(currentUser.id);
+    var userIds = [];
+    userData = users.reduce(function(previousUsers, currentUser){
+      previousUsers[currentUser.id] = {name:                    currentUser.name,
+                                       screen_name:             currentUser.screen_name,
+                                       profile_image_url_https: currentUser.profile_image_url_https
+                                     };
+      userIds.push(currentUser.id);
       return previousUsers;
-    }, []);
-    console.log(userIds.length + 'users!');
+    }, {});
+    console.log(Object.keys(userData).length + 'users!');
     twit.stream('statuses/filter', {follow: userIds.join(',')}, function(stream) {
       stream.on('data', function (data) {
-        // broadcast(data.text);
         broadcast(JSON.stringify(data));
         console.log(data);
       });

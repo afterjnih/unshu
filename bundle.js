@@ -7,21 +7,28 @@ var tweets = {};
 var ws = new WebSocket('ws://localhost:3000');
 console.log(ws);
 ws.onmessage = function (event) {
-  try{
     data = JSON.parse(event.data);
-    pushTweet(data.user.screen_name, data.text);
-    console.log(tweets);
+    if (typeof data.user === "undefined"){
+      for (userId in data){ //初回接続時
+        tweets[userId] = {name:                    data[userId].name,
+                          screen_name:             data[userId].screen_name,
+                          profile_image_url_https: data[userId].profile_image_url_https,
+                          texts:                   []
+                          }
+      }
+      console.log(tweets);
+    }else{
+      pushTweet(data.user.id, data.text);
+      console.log(tweets);
+    }
     React.render(React.createElement(Panes, {tweets: tweets}), document.body);
-  }catch(SyntaxError){
-    console.log(event);
-  }
 }
 
-function pushTweet(user, text){
-  if (typeof tweets[user] === "undefined"){
-    tweets[user] = [text];
+function pushTweet(userId, text){
+  if (typeof tweets[userId] === "undefined"){
+    tweets[userId].texts = [text];
   }else{
-    tweets[user].push(text);
+    tweets[userId].texts.push(text);
   }
 }
 
@@ -82,10 +89,8 @@ var Panes = React.createClass({displayName: "Panes",
   },
   renderPanes: function(tweets){
     var panes_list = [];
-    for (screenName in tweets){
-      console.log(tweets);
-      console.log(tweets[screenName])
-      panes_list.push(React.createElement(Pane, {screenName: screenName, texts: tweets[screenName]}));
+    for (userId in tweets){
+      panes_list.push(React.createElement(Pane, {screenName: tweets[userId].screen_name, texts: tweets[userId].texts}));
     }
     return panes_list;
   },
