@@ -78,7 +78,8 @@ cheerio.fetch(inputUrl, function(err, $, res, html){
     console.log(userIds.length + 'users!');
     twit.stream('statuses/filter', {follow: userIds.join(',')}, function(stream) {
       stream.on('data', function (data) {
-        broadcast(data.text);
+        // broadcast(data.text);
+        broadcast(JSON.stringify(data));
         console.log(data);
       });
     });

@@ -2,13 +2,27 @@
 var React = require('react');
 
 var texts = [];
+var tweets = {};
 
 var ws = new WebSocket('ws://localhost:3000');
 console.log(ws);
 ws.onmessage = function (event) {
-  texts.push(event.data);
-  console.log(texts);
-  React.render(React.createElement(Tweets, {texts: texts}), document.body);
+  try{
+    data = JSON.parse(event.data);
+    pushTweet(data.user.screen_name, data.text);
+    console.log(tweets);
+    React.render(React.createElement(Panes, {tweets: tweets}), document.body);
+  }catch(SyntaxError){
+    console.log(event);
+  }
+}
+
+function pushTweet(user, text){
+  if (typeof tweets[user] === "undefined"){
+    tweets[user] = [text];
+  }else{
+    tweets[user].push(text);
+  }
 }
 
 var Tweet = React.createClass({displayName: "Tweet",
@@ -46,6 +60,43 @@ var Tweets = React.createClass({displayName: "Tweets",
     );
   }
 });
+
+var Pane = React.createClass({displayName: "Pane",
+  propTypes: {
+    screenName: React.PropTypes.string.isRequired,
+    texts: React.PropTypes.array
+  },
+  render: function(){
+    return(
+      React.createElement("div", {className: "pane"}, 
+        React.createElement("dive", {className: "screenName"}, this.props.screenName), 
+        React.createElement(Tweets, {texts: this.props.texts})
+      )
+    );
+  }
+});
+
+var Panes = React.createClass({displayName: "Panes",
+  propTypes: {
+    tweets: React.PropTypes.object
+  },
+  renderPanes: function(tweets){
+    var panes_list = [];
+    for (screenName in tweets){
+      console.log(tweets);
+      console.log(tweets[screenName])
+      panes_list.push(React.createElement(Pane, {screenName: screenName, texts: tweets[screenName]}));
+    }
+    return panes_list;
+  },
+  render: function(){
+    return(
+      React.createElement("div", {className: "panes"}, 
+        this.renderPanes(this.props.tweets)
+      )
+    );
+  }
+})
 
 },{"react":157}],2:[function(require,module,exports){
 // shim for using process in browser
