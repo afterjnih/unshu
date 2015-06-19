@@ -1,5 +1,5 @@
 var React = require('react');
-
+var mediaList = require('react-bootstrap');
 var texts = [];
 var tweets = {};
 
@@ -77,10 +77,14 @@ var Pane = React.createClass({
   render: function(){
     return(
       <div className="pane">
-        <div className="name">{this.props.name}</div>
-        <div className="screenName">{this.props.screenName}</div>
-        <img className="icon" src={this.props.profileImageUrlHttps} />
-        <Tweets texts={this.props.texts}/>
+        <div className="pull-left">
+          <img className="icon" src={this.props.profileImageUrlHttps} />
+        </div>
+        <div className="media-body">
+          <div className="name">{this.props.name}</div>
+          <div className="screenName">{this.props.screenName}</div>
+          <Tweets texts={this.props.texts}/>
+        </div>
       </div>
     );
   }
@@ -92,20 +96,26 @@ var Panes = React.createClass({
   },
   renderPanes: function(tweets){
     var panes_list = [];
+    var lineNumber = 6;
+    var userNumber = Object.keys(tweets).length;
     for (userId in tweets){
-      panes_list.push(<Pane name={tweets[userId].name}
-                            screenName={tweets[userId].screen_name}
-                            profileImageUrlHttps={tweets[userId].profile_image_url_https}
-                            texts={tweets[userId].texts}/>
-                      );
+        panes_list.push(<li className="media col-xs-12 col-sm-6 col-md-4 col-lg-2">
+                          <Pane name={tweets[userId].name}
+                          screenName={tweets[userId].screen_name}
+                          profileImageUrlHttps={tweets[userId].profile_image_url_https}
+                          texts={tweets[userId].texts}/>
+                        </li>
+                        );
     }
     return panes_list;
   },
   render: function(){
     return(
-      <div className="panes">
-        {this.renderPanes(this.props.tweets)}
-      </div>
+      <ul className="panes media-list">
+        <div className="row">
+          {this.renderPanes(this.props.tweets)}
+        </div>
+      </ul>
     );
   }
 })

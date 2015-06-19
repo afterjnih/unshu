@@ -25,6 +25,9 @@ var app = require('http').createServer(function(req, res) {
   case '/bundle.js':
     res.end(fs.readFileSync('bundle.js'));
     break;
+  case '/addition.css':
+    res.end(fs.readFileSync('addition.css'));
+    break;
   }
 }).listen(3000);
 
