@@ -3,6 +3,7 @@ var React = require('react');
 var mediaList = require('react-bootstrap');
 var texts = [];
 var tweets = {};
+var maxTweetsPerPerson = 10;
 
 var ws = new WebSocket('ws://localhost:3000');
 console.log(ws);
@@ -30,6 +31,8 @@ function pushTweet(userId, text){
     tweets[userId].texts = [text];
   }else{
     tweets[userId].texts.push(text);
+    if (tweets[userId].texts.length > maxTweetsPerPerson)
+      tweets[userId].texts.shift();
   }
 }
 
