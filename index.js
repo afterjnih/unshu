@@ -7,12 +7,13 @@ var ws = new WebSocket('ws://localhost:3000');
 console.log(ws);
 ws.onmessage = function (event) {
     data = JSON.parse(event.data);
+    console.log(data);
     if (typeof data.user === "undefined"){
       for (userId in data){ //初回接続時
         tweets[userId] = {name:                    data[userId].name,
                           screen_name:             data[userId].screen_name,
                           profile_image_url_https: data[userId].profile_image_url_https,
-                          texts:                   ['','','']
+                          texts:                   [data[userId].text]
                           }
       }
       console.log(tweets);

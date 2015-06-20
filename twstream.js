@@ -80,6 +80,11 @@ cheerio.fetch(inputUrl, function(err, $, res, html){
                                        screen_name:             currentUser.screen_name,
                                        profile_image_url_https: currentUser.profile_image_url_https
                                      };
+      if(typeof currentUser.status === 'undefined'){
+        previousUsers[currentUser.id].text = '';
+      }else{
+        previousUsers[currentUser.id].text = currentUser.status.text;
+      }
       userIds.push(currentUser.id);
       return previousUsers;
     }, {});
