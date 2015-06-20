@@ -12,7 +12,7 @@ ws.onmessage = function (event) {
         tweets[userId] = {name:                    data[userId].name,
                           screen_name:             data[userId].screen_name,
                           profile_image_url_https: data[userId].profile_image_url_https,
-                          texts:                   []
+                          texts:                   ['','','']
                           }
       }
       console.log(tweets);
@@ -55,7 +55,11 @@ var Tweets = React.createClass({
   },
   renderTweets: function(texts){
     return texts.map(function (text, i){
-      return <Tweet text={text}/>;
+      if (text === ''){
+         return <br></br>;
+      }else{
+        return <Tweet text={text}/>;
+      }
     }.bind(this));
   },
   render: function(){
@@ -81,8 +85,8 @@ var Pane = React.createClass({
           <img className="icon" src={this.props.profileImageUrlHttps} />
         </div>
         <div className="media-body">
-          <div className="name">{this.props.name}</div>
-          <div className="screenName">{this.props.screenName}</div>
+          <span className="name"><small>{this.props.name}</small></span>
+          <span className="screenName"><small><small>{" @" + this.props.screenName}</small></small></span>
           <Tweets texts={this.props.texts}/>
         </div>
       </div>
@@ -96,10 +100,8 @@ var Panes = React.createClass({
   },
   renderPanes: function(tweets){
     var panes_list = [];
-    var lineNumber = 6;
-    var userNumber = Object.keys(tweets).length;
-    for (userId in tweets){
-        panes_list.push(<li className="media col-xs-12 col-sm-6 col-md-4 col-lg-2">
+    for (var userId in tweets){
+        panes_list.push(<li className="media col-xs-12 col-sm-4 col-md-3 col-lg-2">
                           <Pane name={tweets[userId].name}
                           screenName={tweets[userId].screen_name}
                           profileImageUrlHttps={tweets[userId].profile_image_url_https}

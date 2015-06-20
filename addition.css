@@ -1,3 +1,20 @@
+body{
+  color: #eaf4fc;
+  background-color: #0d0015;
+}
+
+.pane{
+  border: 1px #33ff33 solid;
+}
+
+.media{
+  padding: 1px;
+}
+
 .media:first-child{
   margin-top: 15px;
+}
+
+.media-body{
+  padding-left: 3px;
 }

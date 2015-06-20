@@ -13,7 +13,7 @@ ws.onmessage = function (event) {
         tweets[userId] = {name:                    data[userId].name,
                           screen_name:             data[userId].screen_name,
                           profile_image_url_https: data[userId].profile_image_url_https,
-                          texts:                   []
+                          texts:                   ['','','']
                           }
       }
       console.log(tweets);
@@ -56,7 +56,11 @@ var Tweets = React.createClass({displayName: "Tweets",
   },
   renderTweets: function(texts){
     return texts.map(function (text, i){
-      return React.createElement(Tweet, {text: text});
+      if (text === ''){
+         return React.createElement("br", null);
+      }else{
+        return React.createElement(Tweet, {text: text});
+      }
     }.bind(this));
   },
   render: function(){
@@ -82,8 +86,8 @@ var Pane = React.createClass({displayName: "Pane",
           React.createElement("img", {className: "icon", src: this.props.profileImageUrlHttps})
         ), 
         React.createElement("div", {className: "media-body"}, 
-          React.createElement("div", {className: "name"}, this.props.name), 
-          React.createElement("div", {className: "screenName"}, this.props.screenName), 
+          React.createElement("span", {className: "name"}, React.createElement("small", null, this.props.name)), 
+          React.createElement("span", {className: "screenName"}, React.createElement("small", null, React.createElement("small", null, " @" + this.props.screenName))), 
           React.createElement(Tweets, {texts: this.props.texts})
         )
       )
@@ -97,10 +101,8 @@ var Panes = React.createClass({displayName: "Panes",
   },
   renderPanes: function(tweets){
     var panes_list = [];
-    var lineNumber = 6;
-    var userNumber = Object.keys(tweets).length;
-    for (userId in tweets){
-        panes_list.push(React.createElement("li", {className: "media col-xs-12 col-sm-6 col-md-4 col-lg-2"}, 
+    for (var userId in tweets){
+        panes_list.push(React.createElement("li", {className: "media col-xs-12 col-sm-4 col-md-3 col-lg-2"}, 
                           React.createElement(Pane, {name: tweets[userId].name, 
                           screenName: tweets[userId].screen_name, 
                           profileImageUrlHttps: tweets[userId].profile_image_url_https, 
