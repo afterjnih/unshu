@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var React = require('react');
-var MasonryMixin = require('react-masonry-mixin');
+var Panes = require('./panes.js');
 var texts = [];
 var tweets = {};
 var maxTweetsPerPerson = 10;
@@ -36,100 +36,7 @@ function pushTweet(userId, text){
   }
 }
 
-var masonryOptions = {
-    transitionDuration: 0
-};
-
-var Tweet = React.createClass({displayName: "Tweet",
-  propTypes: {
-    text: React.PropTypes.string.isRequired
-  },
-  render: function(){
-    return (
-      React.createElement("div", {className: "tweet"}, 
-        React.createElement("div", {className: "text"}, " ", this.props.text, " ")
-      )
-    );
-  }
-});
-
-var Tweets = React.createClass({displayName: "Tweets",
-  propTypes: {
-    texts: React.PropTypes.array
-  },
-  getDefaultProps: function(){
-    return{
-      texts: ["notweet"]
-    };
-  },
-  renderTweets: function(texts){
-    return texts.map(function (text, i){
-      if (text === ''){
-         return React.createElement("br", null);
-      }else{
-        return React.createElement(Tweet, {text: text});
-      }
-    }.bind(this));
-  },
-  render: function(){
-    return(
-      React.createElement("div", {className: "tweets"}, 
-        this.renderTweets(this.props.texts)
-      )
-    );
-  }
-});
-
-var Pane = React.createClass({displayName: "Pane",
-  propTypes: {
-    name: React.PropTypes.string.isRequired,
-    screenName: React.PropTypes.string.isRequired,
-    profileImageUrlHttps: React.PropTypes.string.isRequired,
-    texts: React.PropTypes.array
-  },
-  render: function(){
-    return(
-      React.createElement("div", {className: "pane item"}, 
-        React.createElement("div", {className: "pull-left"}, 
-          React.createElement("img", {className: "icon", src: this.props.profileImageUrlHttps})
-        ), 
-        React.createElement("div", {className: "media-body"}, 
-          React.createElement("span", {className: "name"}, React.createElement("small", null, this.props.name)), 
-          React.createElement("span", {className: "screenName"}, React.createElement("small", null, React.createElement("small", null, " @" + this.props.screenName))), 
-          React.createElement(Tweets, {texts: this.props.texts})
-        )
-      )
-    );
-  }
-});
-
-var Panes = React.createClass({displayName: "Panes",
-  propTypes: {
-    tweets: React.PropTypes.object
-  },
- mixins: [MasonryMixin('container', masonryOptions)],
- renderPanes: function(tweets){
-    var panes_list = [];
-    for (var userId in tweets){
-        panes_list.push(
-                        React.createElement(Pane, {name: tweets[userId].name, 
-                        screenName: tweets[userId].screen_name, 
-                        profileImageUrlHttps: tweets[userId].profile_image_url_https, 
-                        texts: tweets[userId].texts})
-                        );
-    }
-    return panes_list;
-  },
-  render: function(){
-    return(
-      React.createElement("div", {ref: "container", className: "panes"}, 
-        this.renderPanes(this.props.tweets)
-      )
-    );
-  }
-});
-
-},{"react":174,"react-masonry-mixin":3}],2:[function(require,module,exports){
+},{"./panes.js":175,"react":174}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -23702,4 +23609,104 @@ module.exports = warning;
 },{"./emptyFunction":133,"_process":2}],174:[function(require,module,exports){
 module.exports = require('./lib/React');
 
-},{"./lib/React":47}]},{},[1]);
+},{"./lib/React":47}],175:[function(require,module,exports){
+var React = require('react');
+var MasonryMixin = require('react-masonry-mixin');
+var maxTweetsPerPerson = 10;
+
+var masonryOptions = {
+    transitionDuration: 0
+};
+
+var Tweet = React.createClass({displayName: "Tweet",
+  propTypes: {
+    text: React.PropTypes.string.isRequired
+  },
+  render: function(){
+    return (
+      React.createElement("div", {className: "tweet"}, 
+        React.createElement("div", {className: "text"}, " ", this.props.text, " ")
+      )
+    );
+  }
+});
+
+var Tweets = React.createClass({displayName: "Tweets",
+  propTypes: {
+    texts: React.PropTypes.array
+  },
+  getDefaultProps: function(){
+    return{
+      texts: ["notweet"]
+    };
+  },
+  renderTweets: function(texts){
+    return texts.map(function (text, i){
+      if (text === ''){
+         return React.createElement("br", null);
+      }else{
+        return React.createElement(Tweet, {text: text});
+      }
+    }.bind(this));
+  },
+  render: function(){
+    return(
+      React.createElement("div", {className: "tweets"}, 
+        this.renderTweets(this.props.texts)
+      )
+    );
+  }
+});
+
+var Pane = React.createClass({displayName: "Pane",
+  propTypes: {
+    name: React.PropTypes.string.isRequired,
+    screenName: React.PropTypes.string.isRequired,
+    profileImageUrlHttps: React.PropTypes.string.isRequired,
+    texts: React.PropTypes.array
+  },
+  render: function(){
+    return(
+      React.createElement("div", {className: "pane item"}, 
+        React.createElement("div", {className: "pull-left"}, 
+          React.createElement("img", {className: "icon", src: this.props.profileImageUrlHttps})
+        ), 
+        React.createElement("div", {className: "media-body"}, 
+          React.createElement("span", {className: "name"}, React.createElement("small", null, this.props.name)), 
+          React.createElement("span", {className: "screenName"}, React.createElement("small", null, React.createElement("small", null, " @" + this.props.screenName))), 
+          React.createElement(Tweets, {texts: this.props.texts})
+        )
+      )
+    );
+  }
+});
+
+var Panes = React.createClass({displayName: "Panes",
+  propTypes: {
+    tweets: React.PropTypes.object
+  },
+ mixins: [MasonryMixin('container', masonryOptions)],
+ renderPanes: function(tweets){
+    var panes_list = [];
+    for (var userId in tweets){
+        panes_list.push(
+                        React.createElement(Pane, {name: tweets[userId].name, 
+                        screenName: tweets[userId].screen_name, 
+                        profileImageUrlHttps: tweets[userId].profile_image_url_https, 
+                        texts: tweets[userId].texts})
+                        );
+    }
+    return panes_list;
+  },
+  render: function(){
+    return(
+      React.createElement("div", {ref: "container", className: "panes"}, 
+        this.renderPanes(this.props.tweets)
+      )
+    );
+  }
+});
+
+module.exports = Panes;
+
+},{"react":174,"react-masonry-mixin":3}]},{},[1]);
