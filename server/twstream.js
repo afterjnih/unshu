@@ -13,8 +13,9 @@ var twit = new twitter({
     access_token_secret: process.env.ACCESS_TOKEN_SECRET
 });
 
-var inputUrl = process.argv[2];
-console.log('start monitoring: ' + inputUrl);
+// var inputUrl = process.argv[2];
+// console.log('start monitoring: ' + inputUrl);
+console.log('start monitoring!');
 
 var fs = require('fs');
 var app = require('http').createServer(function(req, res) {
@@ -102,18 +103,17 @@ var showAllUsers = function (inputUrl, func){
         userIds.push(currentUser.id);
         return previousUsers;
       }, {});
-      console.log(userData);
+      // console.log(userData);
       if(typeof func !== 'undefined'){
         func(JSON.stringify(userData));
       }
       console.log(Object.keys(userData).length + 'users!');
       twit.stream('statuses/filter', {follow: userIds.join(',')}, function(stream) {
         stream.on('data', function (data) {
+          console.log(data);
           broadcast(JSON.stringify(data));
         });
       });
     });
   });
 }
-
-showAllUsers(inputUrl);

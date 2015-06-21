@@ -49,6 +49,9 @@ var maxTweetsPerPerson = 10;
 var ws = new WebSocket('ws://localhost:3000');
 console.log(ws);
 ws.onmessage = function (event) {
+  if (event.data === ''){
+    React.render(React.createElement(Form, null), document.body);
+  }else{
     data = JSON.parse(event.data);
     console.log(data);
     if (typeof data.user === "undefined"){
@@ -67,6 +70,7 @@ ws.onmessage = function (event) {
       console.log(tweets);
     }
     React.render(React.createElement(Content, {tweets: tweets}), document.body);
+  }
 }
 
 function pushTweet(userId, text){
