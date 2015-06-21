@@ -1,4 +1,5 @@
 var React = require('react');
+var Form = require('./form.js');
 var Panes = require('./panes.js');
 var texts = [];
 var tweets = {};
@@ -22,7 +23,7 @@ ws.onmessage = function (event) {
       pushTweet(data.user.id, data.text);
       console.log(tweets);
     }
-    React.render(<Panes tweets={tweets}/>, document.body);
+    React.render(<Content tweets={tweets}/>, document.body);
 }
 
 function pushTweet(userId, text){
@@ -34,3 +35,16 @@ function pushTweet(userId, text){
       tweets[userId].texts.shift();
   }
 }
+
+var Content = React.createClass({
+  propTypes: {
+    tweets: React.PropTypes.object
+  },
+  render: function(){
+    return <div className="content">
+            <Form/>
+            <Panes tweets={this.props.tweets}/>
+           </div>
+           ;
+  }
+});
