@@ -1,5 +1,5 @@
 var React = require('react');
-var mediaList = require('react-bootstrap');
+var MasonryMixin = require('react-masonry-mixin');
 var texts = [];
 var tweets = {};
 var maxTweetsPerPerson = 10;
@@ -34,6 +34,10 @@ function pushTweet(userId, text){
       tweets[userId].texts.shift();
   }
 }
+
+var masonryOptions = {
+    transitionDuration: 0
+};
 
 var Tweet = React.createClass({
   propTypes: {
@@ -84,7 +88,7 @@ var Pane = React.createClass({
   },
   render: function(){
     return(
-      <div className="pane">
+      <div className="pane item">
         <div className="pull-left">
           <img className="icon" src={this.props.profileImageUrlHttps} />
         </div>
@@ -102,26 +106,24 @@ var Panes = React.createClass({
   propTypes: {
     tweets: React.PropTypes.object
   },
-  renderPanes: function(tweets){
+ mixins: [MasonryMixin('container', masonryOptions)],
+ renderPanes: function(tweets){
     var panes_list = [];
     for (var userId in tweets){
-        panes_list.push(<li className="media col-xs-12 col-sm-4 col-md-3 col-lg-2">
-                          <Pane name={tweets[userId].name}
-                          screenName={tweets[userId].screen_name}
-                          profileImageUrlHttps={tweets[userId].profile_image_url_https}
-                          texts={tweets[userId].texts}/>
-                        </li>
+        panes_list.push(
+                        <Pane name={tweets[userId].name}
+                        screenName={tweets[userId].screen_name}
+                        profileImageUrlHttps={tweets[userId].profile_image_url_https}
+                        texts={tweets[userId].texts}/>
                         );
     }
     return panes_list;
   },
   render: function(){
     return(
-      <ul className="panes media-list">
-        <div className="row">
-          {this.renderPanes(this.props.tweets)}
-        </div>
-      </ul>
+      <div ref="container" className="panes">
+        {this.renderPanes(this.props.tweets)}
+      </div>
     );
   }
-})
+});
