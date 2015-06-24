@@ -74,7 +74,7 @@ var serverUrl = 'http://localhost:3000/events';
 var Form = React.createClass({displayName: "Form",
   getInitialState: function(){
       return{
-        keyword: "ruby"
+        keyword: ""
       };
     },
   handleChange: function(event){
@@ -98,6 +98,7 @@ var Form = React.createClass({displayName: "Form",
     return React.createElement("form", {onSubmit: this.submitHandler}, 
       React.createElement("input", {
         type: "text", 
+        placeholder: "スペース区切りで&条件", 
         value: this.state.keyword, 
         onChange: this.handleChange}), 
       React.createElement("button", {type: "submit"}, "検索")

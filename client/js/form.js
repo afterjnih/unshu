@@ -5,7 +5,7 @@ var serverUrl = 'http://localhost:3000/events';
 var Form = React.createClass({
   getInitialState: function(){
       return{
-        keyword: "ruby"
+        keyword: ""
       };
     },
   handleChange: function(event){
@@ -29,6 +29,7 @@ var Form = React.createClass({
     return <form onSubmit={this.submitHandler}>
       <input
         type="text"
+        placeholder="スペース区切りで&条件"
         value={this.state.keyword}
         onChange={this.handleChange} />
       <button type="submit">検索</button>
