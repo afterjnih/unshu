@@ -33,8 +33,8 @@ ws.onmessage = function (event) {
       // console.log(tweets);
       // React.render(<Content tweets={tweets}/>, document.body);
     }else{
-      pushTweet(data.user.id, data.text);
-      // console.log(tweets);
+      pushTweet(data.user.id, data.text, data);
+      console.log(tweets);
       // React.render(<Content tweets={tweets}/>, document.body);
     }
     // React.render(<Content tweets={tweets} events={data.events}/>, document.body);
@@ -43,9 +43,14 @@ ws.onmessage = function (event) {
     React.render(<Content tweets={tweets} events={data.events}/>, document.body);
 }
 
-function pushTweet(userId, text){
+function pushTweet(userId, text, data){
   if (typeof tweets[userId] === "undefined"){
     tweets[userId].texts = [text];
+    tweets[userId] = {name: data.user.name,
+                      screen_name: data.user.screen_name,
+                      profile_image_url_https: data.user.profile_image_url_https,
+                      texts: data.text
+                    };
   }else{
     tweets[userId].texts.push(text);
     if (tweets[userId].texts.length > maxTweetsPerPerson)
