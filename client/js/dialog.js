@@ -32,7 +32,10 @@ var Dialog = React.createClass({
   showEvents: function(events){
     var eventList = [];
     for(title in events){
-      eventList.push(<input type="radio" name="event" onChange={this.onChange} value={events[title].url + 'participation/'}>{title}</input>);
+      eventList.push(<div className="event">
+                       <input className="eventsRadioButton" type="radio" name="event" onChange={this.onChange} value={events[title].url + 'participation/'}/>
+                       <span className="eventTitle">{title}</span>
+                     </div>);
     };
     return eventList;
   },
@@ -48,10 +51,12 @@ var Dialog = React.createClass({
   render: function(){
     return(
         <Modal ref="modal">
-          <h2>イベントを選択してください</h2>
+          <h2 className="text-center">イベントを選択してください</h2>
           <form onSubmit={this.submitHandler}>
             {this.showEvents(this.props.events)}
-            <button type="submit">監視する</button>
+            <div className="text-center">
+              <button className="submitButton" type="submit">Watch!!</button>
+            </div>
           </form>
         </Modal>
     );

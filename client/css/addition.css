@@ -10,6 +10,22 @@ body{
   margin-bottom: 5px;
 }
 
+.event{
+  margin: 5px;
+}
+
+.eventTitle{
+  margin-left: 5px;
+}
+
+.eventsRadioButton{
+  padding: 3px;
+}
+
+.submitButton{
+  margin: 5px;
+}
+
 .item{
   width: 250px;
   border: 1px solid #00ffff;
