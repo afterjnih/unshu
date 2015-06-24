@@ -75,16 +75,18 @@ var Panes = React.createClass({
   },
  mixins: [MasonryMixin('container', masonryOptions)],
  renderPanes: function(tweets){
-    var panes_list = [];
-    for (var userId in tweets){
-        panes_list.push(
-                        <Pane name={tweets[userId].name}
-                        screenName={tweets[userId].screen_name}
-                        profileImageUrlHttps={tweets[userId].profile_image_url_https}
-                        texts={tweets[userId].texts}/>
-                        );
+    if (tweets !== {}){
+      var panes_list = [];
+      for (var userId in tweets){
+          panes_list.push(
+                          <Pane name={tweets[userId].name}
+                          screenName={tweets[userId].screen_name}
+                          profileImageUrlHttps={tweets[userId].profile_image_url_https}
+                          texts={tweets[userId].texts}/>
+                          );
+      }
+      return panes_list;
     }
-    return panes_list;
   },
   render: function(){
     return(

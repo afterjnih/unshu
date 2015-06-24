@@ -31,6 +31,7 @@
     "watchify": "^3.2.2"
   },
   "dependencies": {
+    "boron": "^0.1.2",
     "cheerio-httpcli": "^0.3.2",
     "dotenv": "^1.1.0",
     "react-masonry-mixin": "^0.5.7",

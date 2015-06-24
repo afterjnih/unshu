@@ -5,6 +5,8 @@ var url = require('url');
 var twitter = require('twitter');
 var WebSocketServer = require('ws').Server;
 var qs = require('querystring');
+var request = require('superagent');
+var connpassApi = 'http://connpass.com/api/v1/event';
 
 var twit = new twitter({
     consumer_key: process.env.CONSUMER_KEY,
@@ -30,13 +32,36 @@ var app = require('http').createServer(function(req, res) {
   case '/css/addition.css':
     res.end(fs.readFileSync('client/css/addition.css'));
     break;
+  case '/events':
+  // console.log(req);
+    var keyword = '';
+    req.on('data', function(data){
+      keyword += data;
+    });
+    req.on('end', function(){
+      console.log(keyword);
+      var queryKeyword = keyword.split(' ').join(',');
+      request.get(connpassApi)
+             .query('keyword=' + queryKeyword)
+             .end(function(err, resApi){
+               var eventHash = {};
+               eventHash.events = {}
+               resApi.res.body.events.forEach(function(e){
+                 eventHash.events[e.title] = {url: e.event_url};
+               });
+              //  console.log(eventHash);
+               broadcast(JSON.stringify(eventHash));
+               res.end(JSON.stringify(eventHash));
+             });
+    });
+    break;
   case '/event':
     var body = '';
     req.on('data', function(data){
       body += data;
     });
     req.on('end', function(){
-      console.log(body);
+      // console.log(body);
       showAllUsers(body, broadcast);
       res.end('finish');
     });
@@ -85,9 +110,8 @@ var showAllUsers = function (inputUrl, func){
     twitterScreenNamesSet = twitterScreenNames.filter(function(screenName, index, self){
       return self.indexOf(screenName) === index;
     });
-
     twit.get('users/lookup', {screen_name: twitterScreenNamesSet.join(',')}, function(error, users, response){
-      // console.log(users);
+      //  console.log(users);
       var userIds = [];
       userData = '';
       userData = users.reduce(function(previousUsers, currentUser){
@@ -110,7 +134,7 @@ var showAllUsers = function (inputUrl, func){
       console.log(Object.keys(userData).length + 'users!');
       twit.stream('statuses/filter', {follow: userIds.join(',')}, function(stream) {
         stream.on('data', function (data) {
-          console.log(data);
+          // console.log(data);
           broadcast(JSON.stringify(data));
         });
       });

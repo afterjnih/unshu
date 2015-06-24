@@ -1,25 +1,26 @@
 var React = require('react');
 var request = require('superagent');
-var serverUrl = 'http://localhost:3000/event';
+var serverUrl = 'http://localhost:3000/events';
 
 var Form = React.createClass({
   getInitialState: function(){
       return{
-        url: "John Doe"
+        keyword: "ruby"
       };
     },
   handleChange: function(event){
     this.setState({
-      url: event.target.value
+      keyword: event.target.value
     });
   },
   submitHandler: function(event){
+    console.log(event);
     event.preventDefault();
     request
       .post(serverUrl)
       // .send({greaturl: this.state.url})
       .set('Content-Type', 'string')
-      .send(this.state.url)
+      .send(this.state.keyword)
       .end(function(err, res){
         console.log(res);
       });
@@ -28,9 +29,9 @@ var Form = React.createClass({
     return <form onSubmit={this.submitHandler}>
       <input
         type="text"
-        value={this.state.url}
+        value={this.state.keyword}
         onChange={this.handleChange} />
-      <button type="submit">送信</button>
+      <button type="submit">検索</button>
       </form>;
   }
 })
