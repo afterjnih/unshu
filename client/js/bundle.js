@@ -8,6 +8,11 @@ var Dialog = React.createClass({displayName: "Dialog",
   propTypes: {
     events: React.PropTypes.object
   },
+  getDefaultProps: function(){
+    return{
+      events: {}
+    };
+  },
   getInitialState: function(){
     return{
       eventUrl: null
@@ -18,15 +23,12 @@ var Dialog = React.createClass({displayName: "Dialog",
       eventUrl: event.target.value
     });
   },
-  showModal: function(){
-    this.refs.modal.show();
-  },
-  hideModal: function(){
-    this.refs.modal.hide();
-  },
-  componentDidMount: function(){
-    console.log('mount!!!!!!!!!!!!!!!!');
-    this.refs.modal.show();
+  componentDidUpdate: function(){
+    if (Object.keys(this.props.events).length !== 0){
+      this.refs.modal.show();
+    }else{
+      this.refs.modal.hide();
+    }
   },
   showEvents: function(events){
     var eventList = [];
@@ -46,7 +48,6 @@ var Dialog = React.createClass({displayName: "Dialog",
   },
   render: function(){
     return(
-      React.createElement("div", {className: "dialog"}, 
         React.createElement(Modal, {ref: "modal"}, 
           React.createElement("h2", null, "イベントを選択してください"), 
           React.createElement("form", {onSubmit: this.submitHandler}, 
@@ -54,7 +55,6 @@ var Dialog = React.createClass({displayName: "Dialog",
             React.createElement("button", {type: "submit"}, "監視する")
           )
         )
-      )
     );
   }
 });
@@ -109,6 +109,7 @@ var Form = require('./form.js');
 var Panes = require('./panes.js');
 var texts = [];
 var tweets = {};
+var data = {};
 var maxTweetsPerPerson = 10;
 
 var ws = new WebSocket('ws://localhost:3000');
@@ -116,17 +117,17 @@ console.log(ws);
 ws.onmessage = function (event) {
   console.log(event);
   if (event.data === ''){
-    React.render(React.createElement(Form, null), document.body);
-    // React.render(<Dialog/>, document.body);
+    // React.render(<Form/>, document.body);
   }else{
     data = JSON.parse(event.data);
-    console.log(data);
+    // console.log(data);
     if (typeof data.events !== "undefined"){
-      React.render(React.createElement(Dialog, {events: data.events}), document.body);
-     console.log('getevent!!!!!!');
+      // React.render(<Dialog events={data.events}/>, document.body);
+    //  console.log('getevent!!!!!!');
     }else if (typeof data.user === "undefined"){
       tweets = [];
-    console.log("connect");
+    // console.log("connect");
+    // console.log(data.events);
       for (userId in data){ //初回接続時
         tweets[userId] = {name:                    data[userId].name,
                           screen_name:             data[userId].screen_name,
@@ -134,15 +135,17 @@ ws.onmessage = function (event) {
                           texts:                   [data[userId].text]
                           }
       }
-      console.log(tweets);
-      React.render(React.createElement(Content, {tweets: tweets}), document.body);
+      // console.log(tweets);
+      // React.render(<Content tweets={tweets}/>, document.body);
     }else{
       pushTweet(data.user.id, data.text);
-      console.log(tweets);
-      React.render(React.createElement(Content, {tweets: tweets}), document.body);
+      // console.log(tweets);
+      // React.render(<Content tweets={tweets}/>, document.body);
     }
-    // React.render(<Content tweets={tweets}/>, document.body);
+    // React.render(<Content tweets={tweets} events={data.events}/>, document.body);
   }
+  // console.log(data.events);
+    React.render(React.createElement(Content, {tweets: tweets, events: data.events}), document.body);
 }
 
 function pushTweet(userId, text){
@@ -157,12 +160,14 @@ function pushTweet(userId, text){
 
 var Content = React.createClass({displayName: "Content",
   propTypes: {
-    tweets: React.PropTypes.object
+    tweets: React.PropTypes.object,
+    events: React.PropTypes.object
   },
   render: function(){
     return React.createElement("div", {className: "content"}, 
             React.createElement(Form, null), 
-            React.createElement(Panes, {tweets: this.props.tweets})
+            React.createElement(Panes, {tweets: this.props.tweets}), 
+            React.createElement(Dialog, {events: this.props.events})
            )
            ;
   }
@@ -246,16 +251,18 @@ var Panes = React.createClass({displayName: "Panes",
   },
  mixins: [MasonryMixin('container', masonryOptions)],
  renderPanes: function(tweets){
-    var panes_list = [];
-    for (var userId in tweets){
-        panes_list.push(
-                        React.createElement(Pane, {name: tweets[userId].name, 
-                        screenName: tweets[userId].screen_name, 
-                        profileImageUrlHttps: tweets[userId].profile_image_url_https, 
-                        texts: tweets[userId].texts})
-                        );
+    if (tweets !== {}){
+      var panes_list = [];
+      for (var userId in tweets){
+          panes_list.push(
+                          React.createElement(Pane, {name: tweets[userId].name, 
+                          screenName: tweets[userId].screen_name, 
+                          profileImageUrlHttps: tweets[userId].profile_image_url_https, 
+                          texts: tweets[userId].texts})
+                          );
+      }
+      return panes_list;
     }
-    return panes_list;
   },
   render: function(){
     return(

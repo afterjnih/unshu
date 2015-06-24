@@ -49,7 +49,7 @@ var app = require('http').createServer(function(req, res) {
                resApi.res.body.events.forEach(function(e){
                  eventHash.events[e.title] = {url: e.event_url};
                });
-               console.log(eventHash);
+              //  console.log(eventHash);
                broadcast(JSON.stringify(eventHash));
                res.end(JSON.stringify(eventHash));
              });
@@ -61,7 +61,7 @@ var app = require('http').createServer(function(req, res) {
       body += data;
     });
     req.on('end', function(){
-      console.log(body);
+      // console.log(body);
       showAllUsers(body, broadcast);
       res.end('finish');
     });
@@ -111,7 +111,7 @@ var showAllUsers = function (inputUrl, func){
       return self.indexOf(screenName) === index;
     });
     twit.get('users/lookup', {screen_name: twitterScreenNamesSet.join(',')}, function(error, users, response){
-       console.log(users);
+      //  console.log(users);
       var userIds = [];
       userData = '';
       userData = users.reduce(function(previousUsers, currentUser){
@@ -134,7 +134,7 @@ var showAllUsers = function (inputUrl, func){
       console.log(Object.keys(userData).length + 'users!');
       twit.stream('statuses/filter', {follow: userIds.join(',')}, function(stream) {
         stream.on('data', function (data) {
-          console.log(data);
+          // console.log(data);
           broadcast(JSON.stringify(data));
         });
       });

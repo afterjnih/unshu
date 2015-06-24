@@ -7,6 +7,11 @@ var Dialog = React.createClass({
   propTypes: {
     events: React.PropTypes.object
   },
+  getDefaultProps: function(){
+    return{
+      events: {}
+    };
+  },
   getInitialState: function(){
     return{
       eventUrl: null
@@ -17,15 +22,12 @@ var Dialog = React.createClass({
       eventUrl: event.target.value
     });
   },
-  showModal: function(){
-    this.refs.modal.show();
-  },
-  hideModal: function(){
-    this.refs.modal.hide();
-  },
-  componentDidMount: function(){
-    console.log('mount!!!!!!!!!!!!!!!!');
-    this.refs.modal.show();
+  componentDidUpdate: function(){
+    if (Object.keys(this.props.events).length !== 0){
+      this.refs.modal.show();
+    }else{
+      this.refs.modal.hide();
+    }
   },
   showEvents: function(events){
     var eventList = [];
@@ -45,7 +47,6 @@ var Dialog = React.createClass({
   },
   render: function(){
     return(
-      <div className='dialog'>
         <Modal ref="modal">
           <h2>イベントを選択してください</h2>
           <form onSubmit={this.submitHandler}>
@@ -53,7 +54,6 @@ var Dialog = React.createClass({
             <button type="submit">監視する</button>
           </form>
         </Modal>
-      </div>
     );
   }
 });
