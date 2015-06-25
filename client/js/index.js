@@ -19,6 +19,8 @@ ws.onmessage = function (event) {
     if (typeof data.events !== "undefined"){
       // React.render(<Dialog events={data.events}/>, document.body);
     //  console.log('getevent!!!!!!');
+    }else if(typeof data.message !== "undefined"){
+      data.events = {message: data.message};
     }else if (typeof data.user === "undefined"){
       tweets = [];
     // console.log("connect");
@@ -45,7 +47,7 @@ ws.onmessage = function (event) {
 
 function pushTweet(userId, text, data){
   if (typeof tweets[userId] === "undefined"){
-    tweets[userId].texts = [text];
+    // tweets[userId].texts = [text];
     tweets[userId] = {name: data.user.name,
                       screen_name: data.user.screen_name,
                       profile_image_url_https: data.user.profile_image_url_https,

@@ -48,9 +48,22 @@ var Dialog = React.createClass({
                console.log(res);
              });
   },
-  render: function(){
-    return(
-        <Modal ref="modal">
+  hideModal: function(){
+    this.refs.modal.hide();
+  },
+  renderModal: function(events){
+    if(typeof events.message !== "undefined"){
+      return(
+        <div>
+          <h4 className="messageAboutInvalidNumberOfPeople">{events.message}</h4>
+          <div className="text-center">
+            <button onClick={this.hideModal}>閉じる</button>
+          </div>
+        </div>
+      );
+    }else{
+      return(
+        <div>
           <h2 className="text-center">イベントを選択してください</h2>
           <form onSubmit={this.submitHandler}>
             {this.showEvents(this.props.events)}
@@ -58,6 +71,15 @@ var Dialog = React.createClass({
               <button className="submitButton" type="submit">Watch!!</button>
             </div>
           </form>
+        </div>
+      );
+    }
+  },
+  render: function(){
+    // return({this.renderModal(this.props.events)});
+    return(
+        <Modal ref="modal">
+          {this.renderModal(this.props.events)}
         </Modal>
     );
   }

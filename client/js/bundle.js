@@ -49,9 +49,22 @@ var Dialog = React.createClass({displayName: "Dialog",
                console.log(res);
              });
   },
-  render: function(){
-    return(
-        React.createElement(Modal, {ref: "modal"}, 
+  hideModal: function(){
+    this.refs.modal.hide();
+  },
+  renderModal: function(events){
+    if(typeof events.message !== "undefined"){
+      return(
+        React.createElement("div", null, 
+          React.createElement("h4", {className: "messageAboutInvalidNumberOfPeople"}, events.message), 
+          React.createElement("div", {className: "text-center"}, 
+            React.createElement("button", {onClick: this.hideModal}, "閉じる")
+          )
+        )
+      );
+    }else{
+      return(
+        React.createElement("div", null, 
           React.createElement("h2", {className: "text-center"}, "イベントを選択してください"), 
           React.createElement("form", {onSubmit: this.submitHandler}, 
             this.showEvents(this.props.events), 
@@ -59,6 +72,15 @@ var Dialog = React.createClass({displayName: "Dialog",
               React.createElement("button", {className: "submitButton", type: "submit"}, "Watch!!")
             )
           )
+        )
+      );
+    }
+  },
+  render: function(){
+    // return({this.renderModal(this.props.events)});
+    return(
+        React.createElement(Modal, {ref: "modal"}, 
+          this.renderModal(this.props.events)
         )
     );
   }
@@ -130,6 +152,8 @@ ws.onmessage = function (event) {
     if (typeof data.events !== "undefined"){
       // React.render(<Dialog events={data.events}/>, document.body);
     //  console.log('getevent!!!!!!');
+    }else if(typeof data.message !== "undefined"){
+      data.events = {message: data.message};
     }else if (typeof data.user === "undefined"){
       tweets = [];
     // console.log("connect");
@@ -156,7 +180,7 @@ ws.onmessage = function (event) {
 
 function pushTweet(userId, text, data){
   if (typeof tweets[userId] === "undefined"){
-    tweets[userId].texts = [text];
+    // tweets[userId].texts = [text];
     tweets[userId] = {name: data.user.name,
                       screen_name: data.user.screen_name,
                       profile_image_url_https: data.user.profile_image_url_https,

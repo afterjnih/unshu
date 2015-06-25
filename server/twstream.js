@@ -110,34 +110,41 @@ var showAllUsers = function (inputUrl, func){
     twitterScreenNamesSet = twitterScreenNames.filter(function(screenName, index, self){
       return self.indexOf(screenName) === index;
     });
-    twit.get('users/lookup', {screen_name: twitterScreenNamesSet.join(',')}, function(error, users, response){
-      //  console.log(users);
-      var userIds = [];
-      userData = '';
-      userData = users.reduce(function(previousUsers, currentUser){
-        previousUsers[currentUser.id] = {name:                    currentUser.name,
-                                         screen_name:             currentUser.screen_name,
-                                         profile_image_url_https: currentUser.profile_image_url_https
-                                       };
-        if(typeof currentUser.status === 'undefined'){
-          previousUsers[currentUser.id].text = '';
-        }else{
-          previousUsers[currentUser.id].text = currentUser.status.text;
-        }
-        userIds.push(currentUser.id);
-        return previousUsers;
-      }, {});
-      // console.log(userData);
+    console.log(twitterScreenNamesSet);
+    if (twitterScreenNamesSet.length === 0){
+      broadcast(JSON.stringify({message: 'Twitterアカウントを公開しているユーザーが一人もいません'}));
+    }else if(twitterScreenNamesSet.length >= 100){
+      broadcast(JSON.stringify({message: 'Twitterアカウントを公開しているユーザーが１００人を超えるため、表示できません'}));
+    }else{
+      twit.get('users/lookup', {screen_name: twitterScreenNamesSet.join(',')}, function(error, users, response){
+        //  console.log(users);
+        var userIds = [];
+        userData = '';
+        userData = users.reduce(function(previousUsers, currentUser){
+          previousUsers[currentUser.id] = {name:                    currentUser.name,
+                                           screen_name:             currentUser.screen_name,
+                                           profile_image_url_https: currentUser.profile_image_url_https
+                                         };
+          if(typeof currentUser.status === 'undefined'){
+            previousUsers[currentUser.id].text = '';
+          }else{
+            previousUsers[currentUser.id].text = currentUser.status.text;
+          }
+          userIds.push(currentUser.id);
+          return previousUsers;
+        }, {});
+        // console.log(userData);
       if(typeof func !== 'undefined'){
         func(JSON.stringify(userData));
       }
       console.log(Object.keys(userData).length + 'users!');
       twit.stream('statuses/filter', {follow: userIds.join(',')}, function(stream) {
         stream.on('data', function (data) {
-          // console.log(data);
+          console.log(data);
           broadcast(JSON.stringify(data));
         });
       });
     });
+    }
   });
 }
