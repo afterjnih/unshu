@@ -22,7 +22,18 @@ var Dialog = React.createClass({
       eventUrl: event.target.value
     });
   },
+  componentDidMount: function(){
+    console.log('Mount!!!!!!');
+    console.log(Object.keys(this.props.events).length);
+    if (Object.keys(this.props.events).length !== 0){
+      this.refs.modal.show();
+    }else{
+      this.refs.modal.hide();
+    }
+  },
   componentDidUpdate: function(){
+    console.log('update!!!!!!');
+    console.log(Object.keys(this.props.events).length);
     if (Object.keys(this.props.events).length !== 0){
       this.refs.modal.show();
     }else{
@@ -61,7 +72,7 @@ var Dialog = React.createClass({
           </div>
         </div>
       );
-    }else{
+    }else if(Object.keys(events).length !== 0){
       return(
         <div>
           <h2 className="text-center">イベントを選択してください</h2>
@@ -73,10 +84,13 @@ var Dialog = React.createClass({
           </form>
         </div>
       );
+    }else{
+      return(<div>chosen!!!</div>)
     }
   },
   render: function(){
     // return({this.renderModal(this.props.events)});
+    console.log(Object.keys(this.props.events).length);
     return(
         <Modal ref="modal">
           {this.renderModal(this.props.events)}

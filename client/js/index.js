@@ -16,12 +16,12 @@ ws.onmessage = function (event) {
   }else{
     data = JSON.parse(event.data);
     // console.log(data);
-    if (typeof data.events !== "undefined"){
+    if (typeof data.events !== "undefined"){ //
       // React.render(<Dialog events={data.events}/>, document.body);
     //  console.log('getevent!!!!!!');
-    }else if(typeof data.message !== "undefined"){
+    }else if(typeof data.message !== "undefined"){ //人数が多いまたは0のとき
       data.events = {message: data.message};
-    }else if (typeof data.user === "undefined"){
+    }else if (typeof data.user === "undefined"){ //初回接続時
       tweets = [];
     // console.log("connect");
     // console.log(data.events);
@@ -34,7 +34,7 @@ ws.onmessage = function (event) {
       }
       // console.log(tweets);
       // React.render(<Content tweets={tweets}/>, document.body);
-    }else{
+    }else{ //通常のtweet受信時
       pushTweet(data.user.id, data.text, data);
       console.log(tweets);
       // React.render(<Content tweets={tweets}/>, document.body);
@@ -65,12 +65,27 @@ var Content = React.createClass({
     tweets: React.PropTypes.object,
     events: React.PropTypes.object
   },
+  getDefaultProps: function(){
+    return{
+        tweets: {},
+        events: {}
+    }
+  },
   render: function(){
+    if(Object.keys(this.props.events).length == 0){
+      console.log('no dialog');
+    return <div className="content">
+            <Form/>
+            <Panes tweets={this.props.tweets}/>
+           </div>
+    }else{
+      console.log('show dialog');
     return <div className="content">
             <Form/>
             <Panes tweets={this.props.tweets}/>
             <Dialog events={this.props.events}/>
            </div>
            ;
+   }
   }
 });

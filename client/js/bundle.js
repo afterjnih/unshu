@@ -23,7 +23,18 @@ var Dialog = React.createClass({displayName: "Dialog",
       eventUrl: event.target.value
     });
   },
+  componentDidMount: function(){
+    console.log('Mount!!!!!!');
+    console.log(Object.keys(this.props.events).length);
+    if (Object.keys(this.props.events).length !== 0){
+      this.refs.modal.show();
+    }else{
+      this.refs.modal.hide();
+    }
+  },
   componentDidUpdate: function(){
+    console.log('update!!!!!!');
+    console.log(Object.keys(this.props.events).length);
     if (Object.keys(this.props.events).length !== 0){
       this.refs.modal.show();
     }else{
@@ -62,7 +73,7 @@ var Dialog = React.createClass({displayName: "Dialog",
           )
         )
       );
-    }else{
+    }else if(Object.keys(events).length !== 0){
       return(
         React.createElement("div", null, 
           React.createElement("h2", {className: "text-center"}, "イベントを選択してください"), 
@@ -74,10 +85,13 @@ var Dialog = React.createClass({displayName: "Dialog",
           )
         )
       );
+    }else{
+      return(React.createElement("div", null, "chosen!!!"))
     }
   },
   render: function(){
     // return({this.renderModal(this.props.events)});
+    console.log(Object.keys(this.props.events).length);
     return(
         React.createElement(Modal, {ref: "modal"}, 
           this.renderModal(this.props.events)
@@ -149,12 +163,12 @@ ws.onmessage = function (event) {
   }else{
     data = JSON.parse(event.data);
     // console.log(data);
-    if (typeof data.events !== "undefined"){
+    if (typeof data.events !== "undefined"){ //
       // React.render(<Dialog events={data.events}/>, document.body);
     //  console.log('getevent!!!!!!');
-    }else if(typeof data.message !== "undefined"){
+    }else if(typeof data.message !== "undefined"){ //人数が多いまたは0のとき
       data.events = {message: data.message};
-    }else if (typeof data.user === "undefined"){
+    }else if (typeof data.user === "undefined"){ //初回接続時
       tweets = [];
     // console.log("connect");
     // console.log(data.events);
@@ -167,7 +181,7 @@ ws.onmessage = function (event) {
       }
       // console.log(tweets);
       // React.render(<Content tweets={tweets}/>, document.body);
-    }else{
+    }else{ //通常のtweet受信時
       pushTweet(data.user.id, data.text, data);
       console.log(tweets);
       // React.render(<Content tweets={tweets}/>, document.body);
@@ -198,13 +212,28 @@ var Content = React.createClass({displayName: "Content",
     tweets: React.PropTypes.object,
     events: React.PropTypes.object
   },
+  getDefaultProps: function(){
+    return{
+        tweets: {},
+        events: {}
+    }
+  },
   render: function(){
+    if(Object.keys(this.props.events).length == 0){
+      console.log('no dialog');
+    return React.createElement("div", {className: "content"}, 
+            React.createElement(Form, null), 
+            React.createElement(Panes, {tweets: this.props.tweets})
+           )
+    }else{
+      console.log('show dialog');
     return React.createElement("div", {className: "content"}, 
             React.createElement(Form, null), 
             React.createElement(Panes, {tweets: this.props.tweets}), 
             React.createElement(Dialog, {events: this.props.events})
            )
            ;
+   }
   }
 });
 

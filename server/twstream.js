@@ -7,14 +7,15 @@ var WebSocketServer = require('ws').Server;
 var qs = require('querystring');
 var request = require('superagent');
 var connpassApi = 'http://connpass.com/api/v1/event';
-
+var streamingConnections = [];
+var EventEmitter = require('events').EventEmitter;
 var twit = new twitter({
     consumer_key: process.env.CONSUMER_KEY,
     consumer_secret: process.env.CONSUMER_SECRET,
     access_token_key: process.env.ACCESS_TOKEN_KEY,
     access_token_secret: process.env.ACCESS_TOKEN_SECRET
 });
-
+var num = 0;
 // var inputUrl = process.argv[2];
 // console.log('start monitoring: ' + inputUrl);
 console.log('start monitoring!');
@@ -138,13 +139,37 @@ var showAllUsers = function (inputUrl, func){
         func(JSON.stringify(userData));
       }
       console.log(Object.keys(userData).length + 'users!');
+      if (streamingConnections.length !== 0){
+        streamingConnections = streamingConnections.filter(function(e){
+          e.emit('switch');
+          console.log('disconnect!');
+          return false;
+        });
+      }
       twit.stream('statuses/filter', {follow: userIds.join(',')}, function(stream) {
+        num++;
+        var s = num;
         stream.on('data', function (data) {
           console.log(data);
           broadcast(JSON.stringify(data));
+           stream.destroy;
         });
+
+        stream.on('error', function(error){
+          console.log(error);
+        });
+
+        stream.on('end', function (response) {
+          console.log('end' + s);
+        });
+
+        stream.on('switch', function(){
+          console.log('switch');
+          stream.destroy();
+        });
+        streamingConnections.push(stream);
       });
     });
     }
   });
-}
+};
