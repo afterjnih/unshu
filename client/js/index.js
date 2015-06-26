@@ -41,7 +41,8 @@ ws.onmessage = function (event) {
     }
     // React.render(<Content tweets={tweets} events={data.events}/>, document.body);
   }
-  // console.log(data.events);
+  console.log(typeof tweets);
+  // console.log('render content');
     React.render(<Content tweets={tweets} events={data.events}/>, document.body);
 }
 
@@ -72,6 +73,9 @@ var Content = React.createClass({
     }
   },
   render: function(){
+    console.log(this.props.tweets);
+    console.log(Object.keys(this.props.tweets).length);
+    console.log('this is content');
     if(Object.keys(this.props.events).length == 0){
       console.log('no dialog');
     return <div className="content">

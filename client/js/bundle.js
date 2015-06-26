@@ -188,7 +188,8 @@ ws.onmessage = function (event) {
     }
     // React.render(<Content tweets={tweets} events={data.events}/>, document.body);
   }
-  // console.log(data.events);
+  console.log(typeof tweets);
+  // console.log('render content');
     React.render(React.createElement(Content, {tweets: tweets, events: data.events}), document.body);
 }
 
@@ -219,6 +220,9 @@ var Content = React.createClass({displayName: "Content",
     }
   },
   render: function(){
+    console.log(this.props.tweets);
+    console.log(Object.keys(this.props.tweets).length);
+    console.log('this is content');
     if(Object.keys(this.props.events).length == 0){
       console.log('no dialog');
     return React.createElement("div", {className: "content"}, 
@@ -243,7 +247,7 @@ var MasonryMixin = require('react-masonry-mixin');
 var maxTweetsPerPerson = 10;
 
 var masonryOptions = {
-    transitionDuration: 0
+    transitionDuration: 10
 };
 
 var Tweet = React.createClass({displayName: "Tweet",
@@ -314,9 +318,23 @@ var Panes = React.createClass({displayName: "Panes",
     tweets: React.PropTypes.object
   },
  mixins: [MasonryMixin('container', masonryOptions)],
- renderPanes: function(tweets){
-    if (tweets !== {}){
+ componentWillReceiveProps: function(nextProps){
+   console.log('willReceive');
+   console.log(nextProps.tweets);
+  //  this.setState({tweets: nextProps.tweets});
+   console.log(this.props.tweets);
+  //  console.log(this.state.tweets);
+  },
+ componentWillMount: function(){
+   console.log('willMount');
+  //  this.setState({tweets: this.props.tweets});
+ },
+
+ makeComponent: function(tweets){
+  //  var tweets = this.props.tweets
       var panes_list = [];
+    if (tweets !== {}){
+      // var panes_list = [];
       for (var userId in tweets){
           panes_list.push(
                           React.createElement(Pane, {name: tweets[userId].name, 
@@ -325,13 +343,19 @@ var Panes = React.createClass({displayName: "Panes",
                           texts: tweets[userId].texts})
                           );
       }
-      return panes_list;
+      // return panes_list;
     }
+    console.log('panes_list');
+    console.log(panes_list);
+      return panes_list;
   },
   render: function(){
+    // var panes = this.makeComponent(this.state.tweets);
+    console.trace();
+    var panes = this.makeComponent(this.props.tweets);
     return(
       React.createElement("div", {ref: "container", className: "panes"}, 
-        this.renderPanes(this.props.tweets)
+        panes
       )
     );
   }
