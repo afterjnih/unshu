@@ -1,6 +1,6 @@
 var React = require('react');
 var request = require('superagent');
-var serverUrl = 'http://localhost:3000/events';
+var serverUrl = 'http://' + location.host + '/events';
 
 var Form = React.createClass({
   getInitialState: function(){

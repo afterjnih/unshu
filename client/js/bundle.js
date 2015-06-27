@@ -2,7 +2,7 @@
 var React = require('react');
 var Modal = require('boron/FadeModal');
 var request = require('superagent');
-var serverUrl = 'http://localhost:3000/event';
+var serverUrl = 'http://' + location.host + '/event';
 
 var Dialog = React.createClass({displayName: "Dialog",
   propTypes: {
@@ -105,7 +105,7 @@ module.exports = Dialog;
 },{"boron/FadeModal":5,"react":185,"superagent":186}],2:[function(require,module,exports){
 var React = require('react');
 var request = require('superagent');
-var serverUrl = 'http://localhost:3000/events';
+var serverUrl = 'http://' + location.host + '/events';
 
 var Form = React.createClass({displayName: "Form",
   getInitialState: function(){

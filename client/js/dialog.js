@@ -1,7 +1,7 @@
 var React = require('react');
 var Modal = require('boron/FadeModal');
 var request = require('superagent');
-var serverUrl = 'http://localhost:3000/event';
+var serverUrl = 'http://' + location.host + '/event';
 
 var Dialog = React.createClass({
   propTypes: {
