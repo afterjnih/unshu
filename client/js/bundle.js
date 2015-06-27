@@ -154,7 +154,7 @@ var tweets = {};
 var data = {};
 var maxTweetsPerPerson = 10;
 
-var ws = new WebSocket('ws://localhost:3000');
+var ws = new WebSocket('ws://' + location.host);
 console.log(ws);
 ws.onmessage = function (event) {
   console.log(event);
