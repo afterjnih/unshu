@@ -47,14 +47,7 @@ ws.onmessage = function (event) {
 }
 
 function pushTweet(userId, text, data){
-  if (typeof tweets[userId] === "undefined"){
-    // tweets[userId].texts = [text];
-    tweets[userId] = {name: data.user.name,
-                      screen_name: data.user.screen_name,
-                      profile_image_url_https: data.user.profile_image_url_https,
-                      texts: data.text
-                    };
-  }else{
+  if (typeof tweets[userId] !== "undefined"){
     tweets[userId].texts.push(text);
     if (tweets[userId].texts.length > maxTweetsPerPerson)
       tweets[userId].texts.shift();
