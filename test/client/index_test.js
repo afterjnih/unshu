@@ -35,7 +35,7 @@ describe('test for pushTweet(userId, text, data)', function(){
                                       '862314223': {name: "Twitter Music Japan",
                                                     screen_name: "TwitterMusicJP",
                                                     profile_image_url_https: "https://pbs.twimg.com/profile_images/426015746896842752/z0jg8lUb_normal.png",
-                                                    texts: ["this is a sample text by usre02", "this is a second text by usre03"]}
+                                                    texts: ["this is a sample text by usre02", "this is a second text by usre02"]}
                                       }
                                     );
   });
