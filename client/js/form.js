@@ -18,7 +18,6 @@ var Form = React.createClass({
     event.preventDefault();
     request
       .post(serverUrl)
-      // .send({greaturl: this.state.url})
       .set('Content-Type', 'string')
       .send(this.state.keyword)
       .end(function(err, res){

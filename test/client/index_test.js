@@ -4,7 +4,6 @@ var util = require('../../util/util');
 
 describe('test for pushTweet(userId, text, data)', function(){
   it('test01', function(){
-    // var data = testCase.tweetsData01;
     var tweets = {
       '783214': {name: "Twitter",
                  screen_name: "twitter",

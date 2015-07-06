@@ -13,38 +13,26 @@ console.log(ws);
 ws.onmessage = function (event) {
   console.log(event);
   if (event.data === ''){
-    // React.render(<Form/>, document.body);
   }else{
     data = JSON.parse(event.data);
-    // console.log(data);
-    if (typeof data.events !== "undefined"){ //
-      // React.render(<Dialog events={data.events}/>, document.body);
-    //  console.log('getevent!!!!!!');
+    if (typeof data.events !== "undefined"){
     }else if(typeof data.message !== "undefined"){ //人数が多いまたは0のとき
       data.events = {message: data.message};
     }else if (typeof data.user === "undefined"){ //初回接続時
       tweets = [];
-    // console.log("connect");
-    // console.log(data.events);
-      for (userId in data){ //初回接続時
+      for (userId in data){
         tweets[userId] = {name:                    data[userId].name,
                           screen_name:             data[userId].screen_name,
                           profile_image_url_https: data[userId].profile_image_url_https,
                           texts:                   [data[userId].text]
                           }
       }
-      // console.log(tweets);
-      // React.render(<Content tweets={tweets}/>, document.body);
     }else{ //通常のtweet受信時
-      // pushTweet(data.user.id, data.text, data);
       tweets = util.pushTweet(data, tweets, maxTweetsPerPerson);
       console.log(tweets);
-      // React.render(<Content tweets={tweets}/>, document.body);
     }
-    // React.render(<Content tweets={tweets} events={data.events}/>, document.body);
   }
   console.log(typeof tweets);
-  // console.log('render content');
     React.render(<Content tweets={tweets} events={data.events}/>, document.body);
 }
 
