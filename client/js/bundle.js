@@ -149,6 +149,7 @@ var React = require('react');
 var Dialog = require('./dialog.js');
 var Form = require('./form.js');
 var Panes = require('./panes.js');
+var util = require('../../util/util');
 var texts = [];
 var tweets = {};
 var data = {};
@@ -182,7 +183,8 @@ ws.onmessage = function (event) {
       // console.log(tweets);
       // React.render(<Content tweets={tweets}/>, document.body);
     }else{ //通常のtweet受信時
-      pushTweet(data.user.id, data.text, data);
+      // pushTweet(data.user.id, data.text, data);
+      tweets = util.pushTweet(data, tweets, maxTweetsPerPerson);
       console.log(tweets);
       // React.render(<Content tweets={tweets}/>, document.body);
     }
@@ -191,14 +193,6 @@ ws.onmessage = function (event) {
   console.log(typeof tweets);
   // console.log('render content');
     React.render(React.createElement(Content, {tweets: tweets, events: data.events}), document.body);
-}
-
-function pushTweet(userId, text, data){
-  if (typeof tweets[userId] !== "undefined"){
-    tweets[userId].texts.push(text);
-    if (tweets[userId].texts.length > maxTweetsPerPerson)
-      tweets[userId].texts.shift();
-  }
 }
 
 var Content = React.createClass({displayName: "Content",
@@ -234,7 +228,7 @@ var Content = React.createClass({displayName: "Content",
   }
 });
 
-},{"./dialog.js":1,"./form.js":2,"./panes.js":4,"react":185}],4:[function(require,module,exports){
+},{"../../util/util":189,"./dialog.js":1,"./form.js":2,"./panes.js":4,"react":185}],4:[function(require,module,exports){
 var React = require('react');
 var MasonryMixin = require('react-masonry-mixin');
 var maxTweetsPerPerson = 10;
@@ -25720,4 +25714,19 @@ module.exports = function(arr, fn, initial){
   
   return curr;
 };
+},{}],189:[function(require,module,exports){
+'use strict';
+
+module.exports = {
+  pushTweet: function(data, tweets, maxTweetsPerPerson){
+    if (typeof tweets[data.user.id] !== 'undefined'){
+      tweets[data.user.id].texts.push(data.text);
+      if (tweets[data.user.id].texts.length > maxTweetsPerPerson){
+        tweets[data.user.id].texts.shift();
+      }
+    }
+    return tweets;
+  }
+};
+
 },{}]},{},[3]);
