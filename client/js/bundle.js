@@ -152,7 +152,6 @@ var util = require('../../util/util');
 var texts = [];
 var tweets = {};
 var data = {};
-// var events;
 var maxTweetsPerPerson = 10;
 
 var ws = new WebSocket('ws://' + location.host);
@@ -184,18 +183,19 @@ var Content = React.createClass({displayName: "Content",
     return{
         tweets: {},
         events: {}
-    }
+    };
   },
   render: function(){
     console.log(this.props.tweets);
     console.log(Object.keys(this.props.tweets).length);
     console.log('this is content');
-    if(Object.keys(this.props.events).length == 0){
+    if(Object.keys(this.props.events).length === 0){
       console.log('no dialog');
     return React.createElement("div", {className: "content"}, 
             React.createElement(Form, null), 
             React.createElement(Panes, {tweets: this.props.tweets})
            )
+           ;
     }else{
       console.log('show dialog');
     return React.createElement("div", {className: "content"}, 

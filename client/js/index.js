@@ -6,7 +6,6 @@ var util = require('../../util/util');
 var texts = [];
 var tweets = {};
 var data = {};
-// var events;
 var maxTweetsPerPerson = 10;
 
 var ws = new WebSocket('ws://' + location.host);
@@ -38,18 +37,19 @@ var Content = React.createClass({
     return{
         tweets: {},
         events: {}
-    }
+    };
   },
   render: function(){
     console.log(this.props.tweets);
     console.log(Object.keys(this.props.tweets).length);
     console.log('this is content');
-    if(Object.keys(this.props.events).length == 0){
+    if(Object.keys(this.props.events).length === 0){
       console.log('no dialog');
     return <div className="content">
             <Form/>
             <Panes tweets={this.props.tweets}/>
            </div>
+           ;
     }else{
       console.log('show dialog');
     return <div className="content">
