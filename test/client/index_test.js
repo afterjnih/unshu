@@ -39,4 +39,30 @@ describe('test for pushTweet(userId, text, data)', function(){
                                       }
                                     );
   });
+
+  it('when data.user is undefined', function(){
+    var tweets = {};
+    var maxTweetsPerPerson = 10;
+    var data = {
+      '783214': {name: "Twitter",
+                 screen_name: "twitter",
+                 profile_image_url_https: "https://pbs.twimg.com/profile_images/615680132565504000/EIpgSD2K.png",
+                 text: "this is a sample text by usre01"},
+      '862314223': {name: "Twitter Music Japan",
+                    screen_name: 'TwitterMusicJP',
+                    profile_image_url_https: 'https://pbs.twimg.com/profile_images/426015746896842752/z0jg8lUb_normal.png',
+                    text: "this is a sample text by usre02"}
+    };
+    assert.deepEqual(util.pushTweet(data, tweets, maxTweetsPerPerson),{
+                                        '783214': {name: "Twitter",
+                                                   screen_name: "twitter",
+                                                   profile_image_url_https: "https://pbs.twimg.com/profile_images/615680132565504000/EIpgSD2K.png",
+                                                   texts: ["this is a sample text by usre01"]},
+                                        '862314223': {name: "Twitter Music Japan",
+                                                      screen_name: 'TwitterMusicJP',
+                                                      profile_image_url_https: 'https://pbs.twimg.com/profile_images/426015746896842752/z0jg8lUb_normal.png',
+                                                      texts: ["this is a sample text by usre02"]}
+                                        }
+    );
+  });
 });

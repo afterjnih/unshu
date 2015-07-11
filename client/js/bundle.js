@@ -164,16 +164,7 @@ ws.onmessage = function (event) {
     if (typeof data.events !== "undefined"){
     }else if(typeof data.message !== "undefined"){ //人数が多いまたは0のとき
       data.events = {message: data.message};
-    }else if (typeof data.user === "undefined"){ //初回接続時
-      tweets = [];
-      for (userId in data){
-        tweets[userId] = {name:                    data[userId].name,
-                          screen_name:             data[userId].screen_name,
-                          profile_image_url_https: data[userId].profile_image_url_https,
-                          texts:                   [data[userId].text]
-                          }
-      }
-    }else{ //通常のtweet受信時
+    }else{
       tweets = util.pushTweet(data, tweets, maxTweetsPerPerson);
       console.log(tweets);
     }
@@ -25699,7 +25690,16 @@ module.exports = function(arr, fn, initial){
 
 module.exports = {
   pushTweet: function(data, tweets, maxTweetsPerPerson){
-    if (typeof tweets[data.user.id] !== 'undefined'){
+    if (typeof data.user === 'undefined'){ //初回接続時
+      var userId;
+      for (userId in data){
+        tweets[userId] = {name:                    data[userId].name,
+                          screen_name:             data[userId].screen_name,
+                          profile_image_url_https: data[userId].profile_image_url_https,
+                          texts:                   [data[userId].text]
+                         };
+      }
+    }else if (typeof tweets[data.user.id] !== 'undefined'){
       tweets[data.user.id].texts.push(data.text);
       if (tweets[data.user.id].texts.length > maxTweetsPerPerson){
         tweets[data.user.id].texts.shift();
