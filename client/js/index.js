@@ -6,26 +6,28 @@ var util = require('../../util/util');
 var texts = [];
 var tweets = {};
 var data = {};
+// var events;
 var maxTweetsPerPerson = 10;
 
 var ws = new WebSocket('ws://' + location.host);
 console.log(ws);
 ws.onmessage = function (event) {
+  var events;
   console.log(event);
-  if (event.data === ''){
-  }else{
+  if (event.data !== ''){
     data = JSON.parse(event.data);
-    if (typeof data.events !== "undefined"){
-    }else if(typeof data.message !== "undefined"){ //人数が多いまたは0のとき
-      data.events = {message: data.message};
+    if ('events' in data){
+      events = data.events;
+    }else if('message' in data){ //人数が多いまたは0のとき
+      events = {message: data.message};
     }else{
       tweets = util.pushTweet(data, tweets, maxTweetsPerPerson);
       console.log(tweets);
     }
   }
   console.log(typeof tweets);
-    React.render(<Content tweets={tweets} events={data.events}/>, document.body);
-}
+  React.render(<Content tweets={tweets} events={events}/>, document.body);
+};
 
 var Content = React.createClass({
   propTypes: {
