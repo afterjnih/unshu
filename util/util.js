@@ -3,6 +3,7 @@
 module.exports = {
   pushTweet: function(data, tweets, maxTweetsPerPerson){
     if (typeof data.user === 'undefined'){ //初回接続時
+      tweets = {};
       var userId;
       for (userId in data){
         tweets[userId] = {name:                    data[userId].name,

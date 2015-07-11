@@ -41,7 +41,12 @@ describe('test for pushTweet(userId, text, data)', function(){
   });
 
   it('when data.user is undefined', function(){
-    var tweets = {};
+    var tweets = {
+      '2425151': {name: "facebook",
+                 screen_name: "facebook",
+                 profile_image_url_https: "https://pbs.twimg.com/profile_images/3513354941/24aaffa670e634a7da9a087bfa83abe6_normal.png",
+                 texts: ["this is a sample text by facebook"]}
+    };
     var maxTweetsPerPerson = 10;
     var data = {
       '783214': {name: "Twitter",
